@@ -56,7 +56,7 @@ jobs:
         run: 
           rm -f ./.config*
           touch ./.config
-          make oldconfig
+          
           
           cat >> .config <<EOF
           CONFIG_TARGET_ar71xx=y
@@ -72,6 +72,7 @@ jobs:
           find dl -size -1024c -exec rm -f {} \;
       - name: Compile firmware
         run: |
+          make oldconfig
           make -j$(nproc) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
