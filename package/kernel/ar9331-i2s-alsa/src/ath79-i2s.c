@@ -37,7 +37,7 @@
  * */
 #include <linux/gpio.h>
 #include <../arch/mips/ath79/common.h>
-#include <../arch/mips/include/asm/mach-ath79/gpio.h>
+#include <linux/gpio.h>
 #include <linux/delay.h>
 
 typedef unsigned int ar7240_reg_t;
