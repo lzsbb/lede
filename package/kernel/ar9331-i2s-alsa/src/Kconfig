@@ -13,10 +13,19 @@ config AR9331_I2S_DEV
 	help
 	  ar9331 i2s audio dev
 
-config AR9331_WM8727
-	tristate "ar9331 wm8727"
+config SND_ATH79_SOC_AP123_AK4430
+	tristate "SoC Audio support for QCA Reference design AP123 with AK4430"
+	depends on SND_ATH79_SOC
+	select SND_ATH79_SOC_I2S
+	select SND_SOC_AK4430
+	select SND_ATH79_SOC_CODEC
 	help
-	  ar9331 i2s wm8727 codec
+	  Say Y if you want to add support for SoC audio on AP123
+	  Qualcomm-Atheros reference design. This option enables the
+	  AP123-AK4430 machine support, ath79 PCM engine, I2S
+	  interface, internal codec and AK4430 codec.
+
+
 
 config AR9331_CARAMBOLA2
 	tristate "ar9331 carambola2"
