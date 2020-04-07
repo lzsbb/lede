@@ -50,15 +50,15 @@ static struct snd_soc_dai_link carambola_dai = {
 	.name = "Carambola2 audio",
 	.stream_name = "Carambola2 audio",
 	.cpu_dai_name = "ath79-i2s",
-	.codec_dai_name = "wm8727-hifi",
+	.codec_dai_name = "ak4430-hifi",
 	.platform_name = "ath79-pcm-audio",
-	.codec_name = "wm8727",
+	.codec_name = "ak4430-codec",
 	/* use ops to check startup state */
 };
 
 static struct snd_soc_card snd_soc_carambola = {
 	.name = "ATH Carambola2",
-	.long_name = "Carambola2 - ath79-pcm/ath79-i2s/wm8727",
+	.long_name = "Carambola2 - ath79-pcm/ath79-i2s/qca-ap123-ak4430",
 	.dai_link = &carambola_dai,
 	.num_links = 1,
 };
