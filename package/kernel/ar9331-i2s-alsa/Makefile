@@ -49,22 +49,22 @@ define KernelPackage/ath79-i2s/description
 	Kernel module for atheros ar933x i2s dev support
 endef
 
-define KernelPackage/ath79-wm8727
+define KernelPackage/ath79-qca-ap123-ak4430
 	SUBMENU:=i2s alsa modules
-	TITLE:=Atheros 933X wm8727 codec
+	TITLE:=Atheros 933X qca-ap123-ak4430 codec
 	DEPENDS:=@AUDIO_SUPPORT +kmod-ath79-i2s +kmod-ath79-pcm
-	FILES:=$(PKG_BUILD_DIR)/wm8727.ko
+	FILES:=$(PKG_BUILD_DIR)/qca-ap123-ak4430.ko
 	KCONFIG:=
 endef
 
-define KernelPackage/ath79-wm8727/description
-	Kernel module for atheros ar933x wm8727 codec support
+define KernelPackage/ath79-qca-ap123-ak4430/description
+	Kernel module for atheros ar933x qca-ap123-ak4430 codec support
 endef
 
 define KernelPackage/ath79-carambola2
 	SUBMENU:=i2s alsa modules
 	TITLE:=Atheros 933X carambola 2 clue code
-	DEPENDS:=@AUDIO_SUPPORT +kmod-ath79-i2s +kmod-ath79-pcm +kmod-ath79-wm8727
+	DEPENDS:=@AUDIO_SUPPORT +kmod-ath79-i2s +kmod-ath79-pcm +kmod-ath79-qca-ap123-ak4430
 	FILES:=$(PKG_BUILD_DIR)/ath-carambola2.ko
 	KCONFIG:=
 endef
@@ -79,7 +79,7 @@ EXTRA_KCONFIG:= \
 	CONFIG_AR9331_PCM=m \
 	CONFIG_AR9331_I2S=m \
 	CONFIG_AR9331_I2S_DEV=m \
-	CONFIG_AR9331_WM8727=m \
+	CONFIG_AR9331_qca-ap123-ak4430=m \
 	CONFIG_AR9331_CARAMBOLA2=m
 
 EXTRA_CFLAGS:= \
@@ -107,5 +107,5 @@ endef
 $(eval $(call KernelPackage,ath79-pcm))
 $(eval $(call KernelPackage,ath79-i2s))
 $(eval $(call KernelPackage,ath79-i2s-dev))
-$(eval $(call KernelPackage,ath79-wm8727))
+$(eval $(call KernelPackage,ath79-qca-ap123-ak4430))
 $(eval $(call KernelPackage,ath79-carambola2))
