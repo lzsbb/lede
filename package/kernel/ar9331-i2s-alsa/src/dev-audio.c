@@ -37,8 +37,8 @@ static struct platform_device ath79_pcm_device = {
 	.id		= -1,
 };
 
-static struct platform_device qca-ap123-ak4430_codec = {
-	.name		= "qca-ap123-ak4430",
+static struct platform_device ap123_ak4430_ath79_codec = {
+	.name		= "ak4430-codec",
 	.id		= -1,
 };
 
@@ -46,7 +46,7 @@ void __init ath79_audio_device_register(void)
 {
 	platform_device_register(&ath79_i2s_device);
 	platform_device_register(&ath79_pcm_device);
-	platform_device_register(&qca-ap123-ak4430_codec);
+	platform_device_register(&ap123_ak4430_ath79_codec);
 }
 
 void __init ath79_audio_setup(void)
