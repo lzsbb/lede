@@ -16,17 +16,33 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <asm/delay.h>
+#include <asm/mach-ath79/ar71xx_regs.h>
+#include <asm/mach-ath79/ath79.h>
 #include <linux/types.h>
 #include <sound/core.h>
 #include <sound/soc.h>
 #include <linux/module.h>
 
 /* Driver include */
-#include <asm/mach-ath79/ar71xx_regs.h>
-#include <asm/mach-ath79/ath79.h>
+
 #include "ath79-i2s.h"
 #include "ath79-pcm.h"
+/*    新加    */
+#include <linux/platform_device.h>
+#include <linux/ath9k_platform.h>
+#include <linux/gpio.h>
+#include <linux/delay.h>
+
+#include "common.h"
+#include "dev-audio.h"
+#include "dev-eth.h"
+#include "dev-gpio-buttons.h"
+#include "dev-leds-gpio.h"
+#include "dev-m25p80.h"
+#include "dev-spi.h"
+#include "dev-usb.h"
+#include "dev-wmac.h"
+#include "machtypes.h"
 
 static struct platform_device *carambola_snd_device;
 
@@ -34,15 +50,15 @@ static struct snd_soc_dai_link carambola_dai = {
 	.name = "Carambola2 audio",
 	.stream_name = "Carambola2 audio",
 	.cpu_dai_name = "ath79-i2s",
-	.codec_dai_name = "wm8727-hifi",
+	.codec_dai_name = "ak4430-hifi",
 	.platform_name = "ath79-pcm-audio",
-	.codec_name = "wm8727",
+	.codec_name = "ak4430-codec",
 	/* use ops to check startup state */
 };
 
 static struct snd_soc_card snd_soc_carambola = {
 	.name = "ATH Carambola2",
-	.long_name = "Carambola2 - ath79-pcm/ath79-i2s/wm8727",
+	.long_name = "Carambola2 - ath79-pcm/ath79-i2s/qca-ap123-ak4430",
 	.dai_link = &carambola_dai,
 	.num_links = 1,
 };
