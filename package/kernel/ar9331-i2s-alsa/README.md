@@ -12,5 +12,5 @@ It is implemented as a openwrt package and can be compiled with Linux Kernel Ver
     insmod dev-audio.ko
     insmod ath79-i2s.ko
     insmod ath79-pcm-mbox.ko
-    insmod wm8727.ko
-    insmod ath-carambola2.ko
+    insmod qca-ap123-ak4430.ko
+    insmod mach-carambola2.ko
