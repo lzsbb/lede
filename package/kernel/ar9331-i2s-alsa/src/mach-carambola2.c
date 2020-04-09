@@ -33,7 +33,7 @@
 #include <linux/gpio.h>
 #include <linux/delay.h>
 
-#include "common.h"
+/*nclude "common.h"  */
 #include "dev-audio.h"
 #include "dev-eth.h"
 #include "dev-gpio-buttons.h"
