@@ -31,6 +31,10 @@ define Package/shadowsocksr-libev
 	DEPENDS:=+libopenssl +libpthread +libpcre +zlib
 endef
 
+define Package/$(PKG_NAME)/extra_provides
+    echo "libpcre.so.1";
+endef
+
 Package/shadowsocksr-libev-server = $(Package/shadowsocksr-libev)
 Package/shadowsocksr-libev-alt = $(Package/shadowsocksr-libev)
 Package/shadowsocksr-libev-ssr-local = $(Package/shadowsocksr-libev)
