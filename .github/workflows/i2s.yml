@@ -45,10 +45,10 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       
-      - name: Make download
-        run: |
-          make download -j1
-          find dl -size -1024c -exec rm -f {} \;
+#      - name: Make download
+#        run: |
+#          make download -j1
+#          find dl -size -1024c -exec rm -f {} \;
       - name: Compile firmware
         run: |
           make -j$(nproc) || make -j1 V=s
