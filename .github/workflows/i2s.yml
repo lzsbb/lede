@@ -44,19 +44,19 @@ jobs:
           ./scripts/feeds install -a
           ./scripts/feeds update base packages
           ./scripts/feeds install libpcre
-      - name: 编制固件要求
-        run: |
-          rm -f ./.config*
-          touch ./.config
-          # 编译x64固件:
-          cat >> .config <<EOF
-          COCONFIG_TARGET_ar71xx_generic=y
-          CONFIG_TARGET_ar71xx_generic=y
-          CONFIG_TARGET_ar71xx_generic_DEVICE_carambola2=y
-          CONFIG_PACKAGE_kmod-ath79-i2s-dev=y
-          EOF
-          sed -i 's/^[ \t]*//g' ./.config
-          make defconfig
+      #- name: 编制固件要求
+      #  run: |
+      #    rm -f ./.config*
+      #    touch ./.config
+      #    # 编译x64固件:
+      #    cat >> .config <<EOF
+      #    COCONFIG_TARGET_ar71xx_generic=y
+      #    CONFIG_TARGET_ar71xx_generic=y
+      #    CONFIG_TARGET_ar71xx_generic_DEVICE_carambola2=y
+      #    CONFIG_PACKAGE_kmod-ath79-i2s-dev=y
+      #    EOF
+      #    sed -i 's/^[ \t]*//g' ./.config
+      #    make defconfig
       - name: 下载编译
         run: |
           make download -j1
