@@ -78,4 +78,3 @@ MODULE_AUTHOR("Qualcomm-Atheros Inc.");
 MODULE_AUTHOR("Mathieu Olivari <mathieu@qca.qualcomm.com>");
 MODULE_DESCRIPTION("QCA Audio Machine module");
 MODULE_LICENSE("Dual BSD/GPL");
-© 2020 GitHub, Inc.
