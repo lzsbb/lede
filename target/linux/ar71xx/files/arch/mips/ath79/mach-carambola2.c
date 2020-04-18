@@ -41,7 +41,7 @@ static struct snd_soc_dai_link carambola_dai = {
 };
 
 static struct snd_soc_card snd_soc_carambola = {
-	.name = "mach Carambola2",
+	.name = "ath Carambola2",
 	.long_name = "Carambola2 - ath79-pcm/ath79-i2s/qca-ap123-ak4430",
 	.dai_link = &carambola_dai,
 	.num_links = 1,
