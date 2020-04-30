@@ -34,6 +34,12 @@
 #define CARAMBOLA2_CALDATA_OFFSET		0x1000
 #define CARAMBOLA2_WMAC_MAC_OFFSET		0x1002
 
+static const char *carambolac_part_probes[] = {
+	"tp-link",
+	NULL,
+};
+
+
 static struct gpio_led carambola2_leds_gpio[] __initdata = {
 	{
 		.name		= "carambola2:green:wlan",
