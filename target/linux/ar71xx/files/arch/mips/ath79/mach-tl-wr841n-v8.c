@@ -8,32 +8,36 @@
  *  by the Free Software Foundation.
  */
 
-#include <linux/gpio.h>
+
 #include <linux/platform_device.h>
-
-#include <asm/mach-ath79/ath79.h>
+#include <linux/ath9k_platform.h>
+#include <linux/gpio.h>
+#include <linux/delay.h>
 #include <asm/mach-ath79/ar71xx_regs.h>
-
+#include <asm/mach-ath79/ath79.h>
 #include "common.h"
+#include "dev-audio.h"
 #include "dev-eth.h"
 #include "dev-gpio-buttons.h"
 #include "dev-leds-gpio.h"
 #include "dev-m25p80.h"
+#include "dev-spi.h"
 #include "dev-usb.h"
 #include "dev-wmac.h"
 #include "machtypes.h"
 
-#define TL_WR841NV8_GPIO_LED_WLAN	13
-#define TL_WR841NV8_GPIO_LED_QSS	15
-#define TL_WR841NV8_GPIO_LED_WAN	18
-#define TL_WR841NV8_GPIO_LED_LAN1	19
-#define TL_WR841NV8_GPIO_LED_LAN2	20
-#define TL_WR841NV8_GPIO_LED_LAN3	21
-#define TL_WR841NV8_GPIO_LED_LAN4	12
-#define TL_WR841NV8_GPIO_LED_SYSTEM	14
+#define TL_WR841NV8_GPIO_I2S_SD			11	/* I2S signal for WPR003N */
+#define TL_WR841NV8_GPIO_I2S_WS			12	/* I2S signal for WPR003N */
+#define TL_WR841NV8_GPIO_I2S_CLK		13	/* I2S signal for WPR003N */
+#define TL_WR841NV8_GPIO_I2S_MCLK		14	/* I2S signal for WPR003N */
+#define TL_WR841NV8_GPIO_I2S_MIC_SD		16	/* I2S signal for WPR003N */
+#define TL_WR841NV8_GPIO_SPDIF_OUT		18	/* SPDIF signal for WPR003N */
 
-#define TL_WR841NV8_GPIO_BTN_RESET	17
-#define TL_WR841NV8_GPIO_SW_RFKILL	16	/* WPS for MR3420 v2 */
+#define TL_WR841NV8_GPIO_LED_WLAN		4   /* WLAN_LED for WPR003N */
+#define TL_WR841NV8_GPIO_LED_SYSTEM		19  /* SYSTEM_LED for MW300R v4 */
+
+#define TL_WR841NV8_GPIO_BTN_RESET		17
+#define TL_WR841NV8_GPIO_SW_RFKILL		20	/* WPS for MR3420 v2 */
 
 #define TL_MR3420V2_GPIO_LED_3G	11
 #define TL_MR3420V2_GPIO_USB_POWER	4
@@ -59,45 +63,26 @@ static struct flash_platform_data tl_wr841n_v8_flash_data = {
 	.part_probes	= tl_wr841n_v8_part_probes,
 };
 
+static struct platform_device tl_wr841n_v8_internal_codec = {
+	.name		= "ath79-internal-codec",
+	.id		= -1,
+};
+
+static struct platform_device tl_wr841n_v8_spdif_codec = {
+	.name		= "ak4430-codec",
+	.id		= -1,
+};
+
 static struct gpio_led tl_wr841n_v8_leds_gpio[] __initdata = {
 	{
-		.name		= "tp-link:green:lan1",
-		.gpio		= TL_WR841NV8_GPIO_LED_LAN1,
-		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:lan2",
-		.gpio		= TL_WR841NV8_GPIO_LED_LAN2,
-		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:lan3",
-		.gpio		= TL_WR841NV8_GPIO_LED_LAN3,
-		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:lan4",
-		.gpio		= TL_WR841NV8_GPIO_LED_LAN4,
-		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:qss",
-		.gpio		= TL_WR841NV8_GPIO_LED_QSS,
+		.name		= "tp-link:green:wlan",
+		.gpio		= TL_WR841NV8_GPIO_LED_WLAN,
 		.active_low	= 1,
 	}, {
 		.name		= "tp-link:green:system",
 		.gpio		= TL_WR841NV8_GPIO_LED_SYSTEM,
 		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:wan",
-		.gpio		= TL_WR841NV8_GPIO_LED_WAN,
-		.active_low	= 1,
-	}, {
-		.name		= "tp-link:green:wlan",
-		.gpio		= TL_WR841NV8_GPIO_LED_WLAN,
-		.active_low	= 1,
-	}, {
-		/* the 3G LED is only present on the MR3420 v2 */
-		.name		= "tp-link:green:3g",
-		.gpio		= TL_MR3420V2_GPIO_LED_3G,
-		.active_low	= 1,
-	},
+	}, 
 };
 
 static struct gpio_keys_button tl_wr841n_v8_gpio_keys[] __initdata = {
@@ -117,6 +102,50 @@ static struct gpio_keys_button tl_wr841n_v8_gpio_keys[] __initdata = {
 		.active_low	= 0,
 	}
 };
+
+static void __init tl_wr841n_v8_audio_setup(void)
+{
+	u32 t;
+
+	/* Reset I2S internal controller */
+	t = ath79_reset_rr(AR71XX_RESET_REG_RESET_MODULE);
+	ath79_reset_wr(AR71XX_RESET_REG_RESET_MODULE, t | AR934X_RESET_I2S );
+	udelay(1);
+
+	/* GPIO configuration
+	   GPIOs 11,12,13,14 are configured as I2S signal - Output
+	   GPIO 16 is MIC - Input
+	   GPIO 18 is SPDIF - Output
+	   Please note that the value in direction_output doesn't really matter
+	   here as GPIOs are configured to relay internal data signal
+	*/
+	gpio_request(TL_WR841NV8_GPIO_I2S_CLK, "I2S CLK");
+	ath79_gpio_output_select(TL_WR841NV8_GPIO_I2S_CLK, AR934X_GPIO_OUT_MUX_I2S_CLK);
+	gpio_direction_output(TL_WR841NV8_GPIO_I2S_CLK, 0);
+
+	gpio_request(TL_WR841NV8_GPIO_I2S_WS, "I2S WS");
+	ath79_gpio_output_select(TL_WR841NV8_GPIO_I2S_WS, AR934X_GPIO_OUT_MUX_I2S_WS);
+	gpio_direction_output(TL_WR841NV8_GPIO_I2S_WS, 0);
+
+	gpio_request(TL_WR841NV8_GPIO_I2S_SD, "I2S SD");
+	ath79_gpio_output_select(TL_WR841NV8_GPIO_I2S_SD, AR934X_GPIO_OUT_MUX_I2S_SD);
+	gpio_direction_output(TL_WR841NV8_GPIO_I2S_SD, 0);
+
+	gpio_request(TL_WR841NV8_GPIO_I2S_MCLK, "I2S MCLK");
+	ath79_gpio_output_select(TL_WR841NV8_GPIO_I2S_MCLK, AR934X_GPIO_OUT_MUX_I2S_MCK);
+	gpio_direction_output(TL_WR841NV8_GPIO_I2S_MCLK, 0);
+
+	gpio_request(TL_WR841NV8_GPIO_SPDIF_OUT, "SPDIF OUT");
+	ath79_gpio_output_select(TL_WR841NV8_GPIO_SPDIF_OUT, AR934X_GPIO_OUT_MUX_SPDIF_OUT);
+	gpio_direction_output(TL_WR841NV8_GPIO_SPDIF_OUT, 0);
+
+	gpio_request(TL_WR841NV8_GPIO_I2S_MIC_SD, "I2S MIC_SD");
+	ath79_gpio_input_select(TL_WR841NV8_GPIO_I2S_MIC_SD, AR934X_GPIO_IN_MUX_I2S_MIC_SD);
+	gpio_direction_input(TL_WR841NV8_GPIO_I2S_MIC_SD);
+
+	/* Init stereo block registers in default configuration */
+	ath79_audio_setup();
+}
 
 static struct gpio_keys_button tl_mr3420v2_gpio_keys[] __initdata = {
 	{
@@ -188,7 +217,7 @@ static void __init tl_ap123_setup(void)
 
 	ath79_register_m25p80(&tl_wr841n_v8_flash_data);
 
-	ath79_setup_ar934x_eth_cfg(AR934X_ETH_CFG_SW_PHY_SWAP);
+	ath79_setup_ar934x_eth_cfg(AR934X_ETH_CFG_SW_ONLY_MODE);
 
 	ath79_register_mdio(1, 0x0);
 
@@ -197,9 +226,9 @@ static void __init tl_ap123_setup(void)
 
 	/* GMAC0 is connected to the PHY0 of the internal switch */
 	ath79_switch_data.phy4_mii_en = 1;
-	ath79_switch_data.phy_poll_mask = BIT(0);
+	ath79_switch_data.phy_poll_mask = BIT(4);
 	ath79_eth0_data.phy_if_mode = PHY_INTERFACE_MODE_MII;
-	ath79_eth0_data.phy_mask = BIT(0);
+	ath79_eth0_data.phy_mask = BIT(4);
 	ath79_eth0_data.mii_bus_dev = &ath79_mdio1_device.dev;
 	ath79_register_eth(0);
 
@@ -220,6 +249,17 @@ static void __init tl_wr841n_v8_setup(void)
 	ath79_register_gpio_keys_polled(1, TL_WR841NV8_KEYS_POLL_INTERVAL,
 					ARRAY_SIZE(tl_wr841n_v8_gpio_keys),
 					tl_wr841n_v8_gpio_keys);
+    ath79_register_usb();
+		/* Audio initialization: PCM/I2S and CODEC */
+	tl_wr841n_v8_audio_setup();
+	platform_device_register(&tl_wr841n_v8_spdif_codec);
+	platform_device_register(&tl_wr841n_v8_internal_codec);
+	ath79_audio_device_register();
+		gpio_request_one(TL_MR3420V2_GPIO_USB_POWER,
+			 GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+			 "USB power");
+
+	ath79_register_usb();
 }
 
 MIPS_MACHINE(ATH79_MACH_TL_WR841N_V8, "TL-WR841N-v8", "TP-LINK TL-WR841N/ND v8",
