@@ -41,9 +41,10 @@
 	platform_device_register(&ath79_i2s_device);
 	platform_device_register(&ath79_pcm_device);
  }
-
  void __init ath79_audio_setup(void)
  {
-	ath79_dma_base = ioremap_nocache(AR934X_DMA_BASE,AR934X_DMA_SIZE);
+	ath79_dma_base = ioremap_nocache(AR934X_DMA_BASE,AR934X_DMA_SIZE);	
 	ath79_stereo_base = ioremap_nocache(AR934X_STEREO_BASE,AR934X_STEREO_SIZE);
-	ath79_audio_dpll_base = ioremap_nocache(AR934X_AUD_DPLL_BASE,AR934X_AUD_DPLL_SIZE)
+	ath79_audio_dpll_base = ioremap_nocache(AR934X_AUD_DPLL_BASE,AR934X_AUD_DPLL_SIZE
+ }
+ 
