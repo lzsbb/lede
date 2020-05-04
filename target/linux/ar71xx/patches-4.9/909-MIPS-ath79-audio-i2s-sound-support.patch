@@ -1,0 +1,44 @@
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -39,2 +39,3 @@ 
+ source "sound/soc/atmel/Kconfig"
++source "sound/soc/ath79/Kconfig"
+ source "sound/soc/au1x/Kconfig"
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -22,2 +22,3 @@ 
+ obj-$(CONFIG_SND_SOC)	+= atmel/
++obj-$(CONFIG_SND_SOC)   += ath79/
+ obj-$(CONFIG_SND_SOC)	+= au1x/
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -37,2 +37,3 @@ 
+ 	select SND_SOC_AK4104 if SPI_MASTER
++ select SND_SOC_AK4430
+ 	select SND_SOC_AK4535 if I2C
+@@ -355,6 +355,9 @@ 
+ 	tristate "AKM AK4104 CODEC"
+ 	depends on SPI_MASTER
+ 
++config SND_SOC_AK4430
++        tristate "AKM AK4430 CODEC"
++
+ config SND_SOC_AK4535
+ 	tristate
+ 
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -26,5 +26,6 @@ 
+ snd-soc-adav803-objs := adav803.o
+ snd-soc-ads117x-objs := ads117x.o
+ snd-soc-ak4104-objs := ak4104.o
++snd-soc-ak4430-objs := ak4430.o
+ snd-soc-ak4535-objs := ak4535.o
+ snd-soc-ak4554-objs := ak4554.o
+@@ -249,5 +249,6 @@ 
+ obj-$(CONFIG_SND_SOC_ADAV803)  += snd-soc-adav803.o
+ obj-$(CONFIG_SND_SOC_ADS117X)	+= snd-soc-ads117x.o
+ obj-$(CONFIG_SND_SOC_AK4104)	+= snd-soc-ak4104.o
++obj-$(CONFIG_SND_SOC_AK4430)	+= snd-soc-ak4430.o
+ obj-$(CONFIG_SND_SOC_AK4535)	+= snd-soc-ak4535.o
+ obj-$(CONFIG_SND_SOC_AK4554)	+= snd-soc-ak4554.o
