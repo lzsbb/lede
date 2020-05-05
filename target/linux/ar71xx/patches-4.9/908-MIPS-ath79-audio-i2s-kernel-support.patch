@@ -41,7 +41,7 @@
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -208,17 +208,21 @@ 
+@@ -237,17 +237,21 @@ 
  	void __iomem *base = ath79_gpio_base;
  	unsigned int reg, reg_base;
 +	unsigned long gpio_count;
@@ -66,15 +66,13 @@
  	s = 8 * (gpio % 4);
 --- a/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 +++ b/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
-@@ -99,4 +99,6 @@
+@@ -99,6 +99,12 @@
  #define AR934X_GMAC_BASE	(AR71XX_APB_BASE + 0x00070000)
  #define AR934X_GMAC_SIZE	0x14
  #define AR934X_WMAC_BASE	(AR71XX_APB_BASE + 0x00100000)
  #define AR934X_WMAC_SIZE	0x20000
 +#define AR934X_AUD_DPLL_BASE	(AR71XX_APB_BASE + 0x00116200)
 +#define AR934X_AUD_DPLL_SIZE	0x10
-@@ -104,3 +104,7 @@
- #define AR934X_AUD_DPLL_SIZE	0x10
  #define AR934X_EHCI_BASE	0x1b000000
  #define AR934X_EHCI_SIZE	0x200
 +#define AR934X_DMA_BASE		(AR71XX_APB_BASE + 0x000A0000)
@@ -87,7 +85,7 @@
  #define AR934X_PLL_CPU_CONFIG_NFRAC_SHIFT	0
  #define AR934X_PLL_CPU_CONFIG_NFRAC_MASK	0x3f
  #define AR934X_PLL_CPU_CONFIG_NINT_SHIFT	6
-@@ -468,3 +468,14 @@
+@@ -470,3 +470,14 @@
  #define QCA955X_PLL_CLK_CTRL_DDRCLK_FROM_DDRPLL		BIT(21)
  #define QCA955X_PLL_CLK_CTRL_AHBCLK_FROM_DDRPLL		BIT(24)
  
