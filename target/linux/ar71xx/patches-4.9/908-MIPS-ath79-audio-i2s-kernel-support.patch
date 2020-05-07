@@ -41,11 +41,13 @@
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -121,17 +121,21 @@ 
+@@ -92,4 +92,5 @@ 
  	void __iomem *base = ath79_gpio_base;
  	unsigned int reg, reg_base;
 +	unsigned long gpio_count;
  	u32 t, s;
+
+@@ -124,15 +124,20 @@
 
 - if (soc_is_ar934x()) 
 -	reg_base = AR934X_GPIO_REG_OUT_FUNC0;
@@ -65,23 +67,29 @@
 +	return;
  	reg = reg_base + 4 * (gpio / 4);
  	s = 8 * (gpio % 4);
+
 --- a/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 +++ b/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
-@@ -97,6 +97,13 @@
- #define AR934X_GMAC_BASE	(AR71XX_APB_BASE + 0x00070000)
+@@ -98,8 +98,15 @@
  #define AR934X_GMAC_SIZE	0x14
  #define AR934X_WMAC_BASE	(AR71XX_APB_BASE + 0x00100000)
  #define AR934X_WMAC_SIZE	0x20000
 +#define AR934X_AUD_DPLL_BASE	(AR71XX_APB_BASE + 0x00116200)
 +#define AR934X_AUD_DPLL_SIZE	0x10
-+
  #define AR934X_EHCI_BASE	0x1b000000
  #define AR934X_EHCI_SIZE	0x200
 +#define AR934X_DMA_BASE		(AR71XX_APB_BASE + 0x000A0000)
 +#define AR934X_DMA_SIZE		0x6C
 +#define AR934X_STEREO_BASE	(AR71XX_APB_BASE + 0x000B0000)
 +#define AR934X_STEREO_SIZE	0x18
-@@ -311,3 +311,5 @@
++
+ #define AR934X_NFC_BASE		0x1b000200
+ #define AR934X_NFC_SIZE		0xb8
+ #define AR934X_SRIF_BASE	(AR71XX_APB_BASE + 0x00116000)
+@@ -308,6 +308,10 @@
+ #define AR934X_PLL_SWITCH_CLOCK_CONTROL_REG	0x24
+ #define AR934X_PLL_ETH_XMII_CONTROL_REG		0x2c
+
 +#define AR934X_PLL_AUDIO_CONFIG_REG		0x30
 +#define AR934X_PLL_AUDIO_MOD_REG		0x34
  #define AR934X_PLL_CPU_CONFIG_NFRAC_SHIFT	0
@@ -104,7 +112,7 @@
 +#define AR934X_PLL_AUDIO_MOD_TGT_DIV_INT_SHIFT	1
 +#define AR934X_PLL_AUDIO_MOD_TGT_DIV_INT_MASK	0x3f
 +
- #define QCA955X_PLL_CLK_CTRL_DDRCLK_FROM_DDRPLL
+#define QCA955X_PLL_CLK_CTRL_DDRCLK_FROM_DDRPLL
 @@ -959,2 +959,31 @@
  #define AR934X_GPIO_REG_FUNC		0x6c
  
