@@ -30,7 +30,7 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 ===================================================================
 --- a/arch/mips/ath79/gpio.c
 +++ b/arch/mips/ath79/gpio.c
-@@ -171,6 +171,35 @@ void ath79_gpio_function_setup(u32 set,
+@@ -77,6 +77,35 @@ void ath79_gpio_function_setup(u32 set,
  	spin_unlock_irqrestore(&ath79_gpio_lock, flags);
  }
  
@@ -66,7 +66,7 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -185,15 +214,19 @@ void __init ath79_gpio_output_select(uns
+@@ -214,15 +214,19 @@ void __init ath79_gpio_output_select(uns
  {
  	void __iomem *base = ath79_gpio_base;
  	unsigned long flags;
@@ -113,7 +113,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define AR934X_NFC_BASE		0x1b000200
  #define AR934X_NFC_SIZE		0xb8
  #define AR934X_SRIF_BASE	(AR71XX_APB_BASE + 0x00116000)
-@@ -265,7 +272,8 @@
+@@ -314,7 +314,8 @@
  #define AR934X_PLL_CPU_DDR_CLK_CTRL_REG		0x08
  #define AR934X_PLL_SWITCH_CLOCK_CONTROL_REG	0x24
  #define AR934X_PLL_ETH_XMII_CONTROL_REG		0x2c
@@ -123,7 +123,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define AR934X_PLL_CPU_CONFIG_NFRAC_SHIFT	0
  #define AR934X_PLL_CPU_CONFIG_NFRAC_MASK	0x3f
  #define AR934X_PLL_CPU_CONFIG_NINT_SHIFT	6
-@@ -373,6 +381,19 @@
+@@ -424,6 +424,19 @@
  #define QCA955X_PLL_CLK_CTRL_DDRCLK_FROM_DDRPLL		BIT(21)
  #define QCA955X_PLL_CLK_CTRL_AHBCLK_FROM_DDRPLL		BIT(24)
  
@@ -143,7 +143,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_PLL_CPU_CONFIG_REG			0x00
  #define QCA956X_PLL_CPU_CONFIG1_REG			0x04
  #define QCA956X_PLL_DDR_CONFIG_REG			0x08
-@@ -786,6 +807,35 @@
+@@ -923,6 +923,35 @@
  #define AR934X_GPIO_REG_OUT_FUNC5	0x40
  #define AR934X_GPIO_REG_FUNC		0x6c
  
@@ -179,7 +179,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_GPIO_REG_OUT_FUNC0	0x2c
  #define QCA956X_GPIO_REG_OUT_FUNC1	0x30
  #define QCA956X_GPIO_REG_OUT_FUNC2	0x34
-@@ -830,6 +880,230 @@
+@@ -1014,6 +1014,230 @@
  #define AR934X_SRIF_DPLL2_OUTDIV_SHIFT	13
  #define AR934X_SRIF_DPLL2_OUTDIV_MASK	0x7
  
@@ -414,7 +414,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ath79.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/ath79.h
 +++ b/arch/mips/include/asm/mach-ath79/ath79.h
-@@ -147,12 +147,36 @@ extern void __iomem *ath79_ddr_base;
+@@ -154,12 +154,36 @@ extern void __iomem *ath79_ddr_base;
  extern void __iomem *ath79_gpio_base;
  extern void __iomem *ath79_pll_base;
  extern void __iomem *ath79_reset_base;
@@ -451,7 +451,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ath79.h
  static inline u32 ath79_pll_rr(unsigned reg)
  {
  	return __raw_readl(ath79_pll_base + reg);
-@@ -175,5 +199,14 @@ u32 ath79_device_reset_get(u32 mask);
+@@ -199,5 +199,14 @@ u32 ath79_device_reset_get(u32 mask);
  
  void ath79_flash_acquire(void);
  void ath79_flash_release(void);
