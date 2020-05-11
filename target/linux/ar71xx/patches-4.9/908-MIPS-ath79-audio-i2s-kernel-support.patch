@@ -143,7 +143,9 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_PLL_CPU_CONFIG_REG			0x00
  #define QCA956X_PLL_CPU_CONFIG1_REG			0x04
  #define QCA956X_PLL_DDR_CONFIG_REG			0x08
-@@ -923,6 +923,35 @@
+@@ -921,8 +921,37 @@
+ #define AR934X_GPIO_REG_OUT_FUNC3	0x38
+ #define AR934X_GPIO_REG_OUT_FUNC4	0x3c
  #define AR934X_GPIO_REG_OUT_FUNC5	0x40
  #define AR934X_GPIO_REG_FUNC		0x6c
  
@@ -179,7 +181,8 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_GPIO_REG_OUT_FUNC0	0x2c
  #define QCA956X_GPIO_REG_OUT_FUNC1	0x30
  #define QCA956X_GPIO_REG_OUT_FUNC2	0x34
-@@ -1014,6 +1014,230 @@
+@@ -1014,7 +1014,231 @@
+ #define AR934X_SRIF_DPLL2_LOCAL_PLL	BIT(30)
  #define AR934X_SRIF_DPLL2_OUTDIV_SHIFT	13
  #define AR934X_SRIF_DPLL2_OUTDIV_MASK	0x7
  
