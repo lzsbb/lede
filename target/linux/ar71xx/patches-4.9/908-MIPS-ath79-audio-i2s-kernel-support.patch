@@ -30,7 +30,7 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 ===================================================================
 --- a/arch/mips/ath79/gpio.c
 +++ b/arch/mips/ath79/gpio.c
-@@ -77,6 +77,35 @@ void ath79_gpio_function_setup(u32 set,
+@@ -77,7 +77,36 @@ void ath79_gpio_function_setup(u32 set,
  	spin_unlock_irqrestore(&ath79_gpio_lock, flags);
  }
  
@@ -66,7 +66,7 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -214,15 +214,19 @@ void __init ath79_gpio_output_select(uns
+@@ -243,15 +243,19 @@ void __init ath79_gpio_output_select(uns
  {
  	void __iomem *base = ath79_gpio_base;
  	unsigned long flags;
@@ -143,7 +143,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_PLL_CPU_CONFIG_REG			0x00
  #define QCA956X_PLL_CPU_CONFIG1_REG			0x04
  #define QCA956X_PLL_DDR_CONFIG_REG			0x08
-@@ -921,8 +921,37 @@
+@@ -942,8 +942,37 @@
  #define AR934X_GPIO_REG_OUT_FUNC3	0x38
  #define AR934X_GPIO_REG_OUT_FUNC4	0x3c
  #define AR934X_GPIO_REG_OUT_FUNC5	0x40
@@ -181,7 +181,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_GPIO_REG_OUT_FUNC0	0x2c
  #define QCA956X_GPIO_REG_OUT_FUNC1	0x30
  #define QCA956X_GPIO_REG_OUT_FUNC2	0x34
-@@ -1014,7 +1014,231 @@
+@@ -1035,7 +1035,231 @@
  #define AR934X_SRIF_DPLL2_LOCAL_PLL	BIT(30)
  #define AR934X_SRIF_DPLL2_OUTDIV_SHIFT	13
  #define AR934X_SRIF_DPLL2_OUTDIV_MASK	0x7
@@ -454,7 +454,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ath79.h
  static inline u32 ath79_pll_rr(unsigned reg)
  {
  	return __raw_readl(ath79_pll_base + reg);
-@@ -199,5 +199,14 @@ u32 ath79_device_reset_get(u32 mask);
+@@ -223,5 +223,14 @@ u32 ath79_device_reset_get(u32 mask);
  
  void ath79_flash_acquire(void);
  void ath79_flash_release(void);
@@ -473,7 +473,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/irq.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/irq.h
 +++ b/arch/mips/include/asm/mach-ath79/irq.h
-@@ -16,6 +16,28 @@
+@@ -18,6 +18,28 @@
  
  #define ATH79_MISC_IRQ_BASE	8
  #define ATH79_MISC_IRQ_COUNT	32
