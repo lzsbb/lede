@@ -1,7 +1,7 @@
 Index: linux-3.18.23/sound/soc/Kconfig
 ===================================================================
---- linux-3.18.23.orig/sound/soc/Kconfig
-+++ linux-3.18.23/sound/soc/Kconfig
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
 @@ -33,6 +33,7 @@ config SND_SOC_GENERIC_DMAENGINE_PCM
  # All the supported SoCs
  source "sound/soc/adi/Kconfig"
@@ -12,8 +12,8 @@ Index: linux-3.18.23/sound/soc/Kconfig
  source "sound/soc/blackfin/Kconfig"
 Index: linux-3.18.23/sound/soc/Makefile
 ===================================================================
---- linux-3.18.23.orig/sound/soc/Makefile
-+++ linux-3.18.23/sound/soc/Makefile
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
 @@ -10,6 +10,7 @@ obj-$(CONFIG_SND_SOC)	+= codecs/
  obj-$(CONFIG_SND_SOC)	+= generic/
  obj-$(CONFIG_SND_SOC)	+= adi/
@@ -24,8 +24,8 @@ Index: linux-3.18.23/sound/soc/Makefile
  obj-$(CONFIG_SND_SOC)	+= blackfin/
 Index: linux-3.18.23/sound/soc/codecs/Kconfig
 ===================================================================
---- linux-3.18.23.orig/sound/soc/codecs/Kconfig
-+++ linux-3.18.23/sound/soc/codecs/Kconfig
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
 @@ -34,6 +34,7 @@ config SND_SOC_ALL_CODECS
  	select SND_SOC_ADAU1701 if I2C
  	select SND_SOC_ADS117X
@@ -46,8 +46,8 @@ Index: linux-3.18.23/sound/soc/codecs/Kconfig
  
 Index: linux-3.18.23/sound/soc/codecs/Makefile
 ===================================================================
---- linux-3.18.23.orig/sound/soc/codecs/Makefile
-+++ linux-3.18.23/sound/soc/codecs/Makefile
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
 @@ -24,6 +24,7 @@ snd-soc-adav801-objs := adav801.o
  snd-soc-adav803-objs := adav803.o
  snd-soc-ads117x-objs := ads117x.o
