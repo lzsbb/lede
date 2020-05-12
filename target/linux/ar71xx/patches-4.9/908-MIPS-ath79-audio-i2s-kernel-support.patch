@@ -49,20 +49,21 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -243,14 +243,18 @@ 
+@@ -243,14 +243,18 @@
  	void __iomem *base = ath79_gpio_base;
- 	unsigned long flags;
--	unsigned int reg;
-+	unsigned int reg, reg_base;
+ 	unsigned int reg, reg_base;
 +	unsigned long gpio_count;
  	u32 t, s;
- 
--	BUG_ON(!soc_is_ar934x());
--
--	if (gpio >= AR934X_GPIO_COUNT)
--		return;
--
--	reg = AR934X_GPIO_REG_OUT_FUNC0 + 4 * (gpio / 4);
+- if (soc_is_ar934x())
+-	   	reg_base = AR934X_GPIO_REG_OUT_FUNC0;
+- else if (soc_is_qca953x())
+-   		reg_base = QCA953X_GPIO_REG_OUT_FUNC0;
+-	else if (soc_is_qca955x())
+-   		reg_base = QCA955X_GPIO_REG_OUT_FUNC0;
+-	else if (soc_is_qca956x())
+-   		reg_base = QCA956X_GPIO_REG_OUT_FUNC0;
+-	else
+-   		BUG();
 +	if (soc_is_ar934x()) {
 +		gpio_count = AR934X_GPIO_COUNT;
 +		reg_base = AR934X_GPIO_REG_OUT_FUNC0;
@@ -71,10 +72,8 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 +	}
 +          if (gpio >= gpio_count)
 +	return;
-+	reg = reg_base + 4 * (gpio / 4);
- 	s = 8 * (gpio % 4);
- 
- 	spin_lock_irqsave(&ath79_gpio_lock, flags);
+ 	reg = reg_base + 4 * (gpio / 4);
+ 	s = 8 * (gpio % 4); 
 Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
