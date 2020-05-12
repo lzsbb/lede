@@ -1,31 +1,14 @@
 
-Index: linux-3.18.23/arch/mips/ath79/Kconfig
-===================================================================
---- a/arch/mips/ath79/Kconfig
-+++ b/arch/mips/ath79/Kconfig
-@@ -1094,6 +1094,10 @@ config ATH79_MACH_TL_WR841N_V8
- 	select ATH79_DEV_USB
- 	select ATH79_DEV_WMAC
- 
-+config ATH79_DEV_AUDIO
-+	def_bool y
-+
-+
- config ATH79_MACH_PISEN_WFR101N
-        bool "PISEN_WFR101N support"
-        select SOC_AR934X
 Index: linux-3.18.23/arch/mips/ath79/common.h
 ===================================================================
 --- a/arch/mips/ath79/common.h
 +++ b/arch/mips/ath79/common.h
-@@ -27,6 +27,7 @@ void ath79_ddr_wb_flush(unsigned int reg
- void ath79_gpio_function_enable(u32 mask);
- void ath79_gpio_function_disable(u32 mask);
- void ath79_gpio_function_setup(u32 set, u32 clear);
+@@ -33,4 +33,5 @@ 
 +void ath79_gpio_input_select(unsigned gpio, u8 val);
  void ath79_gpio_output_select(unsigned gpio, u8 val);
+ int ath79_gpio_direction_select(unsigned gpio, bool oe);
  void ath79_gpio_init(void);
- 
+
 Index: linux-3.18.23/arch/mips/ath79/gpio.c
 ===================================================================
 --- a/arch/mips/ath79/gpio.c
