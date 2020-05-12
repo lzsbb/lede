@@ -49,7 +49,7 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
  void ath79_gpio_function_enable(u32 mask)
  {
  	ath79_gpio_function_setup(mask, 0);
-@@ -243,15 +243,14 @@
+@@ -150,15 +150,14 @@
  	void __iomem *base = ath79_gpio_base;
  	unsigned int reg, reg_base;
 +	unsigned long gpio_count;
