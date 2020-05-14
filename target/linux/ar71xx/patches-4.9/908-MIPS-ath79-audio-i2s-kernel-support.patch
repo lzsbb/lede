@@ -13,8 +13,10 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 ===================================================================
 --- a/arch/mips/ath79/gpio.c
 +++ b/arch/mips/ath79/gpio.c
-@@ -77,7 +77,36 @@ void ath79_gpio_function_setup(u32 set,
- 	spin_unlock_irqrestore(&ath79_gpio_lock, flags);
+@@ -85,10 +85,38 @@
+ void ath79_gpio_function_disable(u32 mask)
+ {
+	ath79_gpio_function_setup(0, mask);
  }
  
 +void __init ath79_gpio_input_select(unsigned gpio, u8 val)
@@ -45,15 +47,18 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 +	spin_unlock_irqrestore(&ath79_gpio_lock, flags);
 +}
 +
-+
- void ath79_gpio_function_enable(u32 mask)
+ void __init ath79_gpio_output_select(unsigned gpio, u8 val)
  {
- 	ath79_gpio_function_setup(mask, 0);
-@@ -150,15 +150,14 @@
+	void __iomem *base = ath79_gpio_base;
+    unsigned int reg, reg_base;
+	u32 t, s;
+@@ -120,3 +120,4 @@
  	void __iomem *base = ath79_gpio_base;
  	unsigned int reg, reg_base;
 +	unsigned long gpio_count;
  	u32 t, s;
+
+@@ -125,14 +125,12 @@
 - if (soc_is_ar934x())
 -	   	reg_base = AR934X_GPIO_REG_OUT_FUNC0;
 - else if (soc_is_qca953x())
@@ -72,8 +77,10 @@ Index: linux-3.18.23/arch/mips/ath79/gpio.c
 +	}
 +          if (gpio >= gpio_count)
 +	return;
- 	reg = reg_base + 4 * (gpio / 4);
- 	s = 8 * (gpio % 4); 
+ 	
+    reg = reg_base + 4 * (gpio / 4);
+ 	s = 8 * (gpio % 4);
+
 Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
@@ -94,7 +101,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define AR934X_NFC_BASE		0x1b000200
  #define AR934X_NFC_SIZE		0xb8
  #define AR934X_SRIF_BASE	(AR71XX_APB_BASE + 0x00116000)
-@@ -314,7 +314,8 @@
+@@ -307,7 +307,8 @@
  #define AR934X_PLL_CPU_DDR_CLK_CTRL_REG		0x08
  #define AR934X_PLL_SWITCH_CLOCK_CONTROL_REG	0x24
  #define AR934X_PLL_ETH_XMII_CONTROL_REG		0x2c
@@ -104,7 +111,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define AR934X_PLL_CPU_CONFIG_NFRAC_SHIFT	0
  #define AR934X_PLL_CPU_CONFIG_NFRAC_MASK	0x3f
  #define AR934X_PLL_CPU_CONFIG_NINT_SHIFT	6
-@@ -424,6 +424,19 @@
+@@ -416,6 +416,19 @@
  #define QCA955X_PLL_CLK_CTRL_DDRCLK_FROM_DDRPLL		BIT(21)
  #define QCA955X_PLL_CLK_CTRL_AHBCLK_FROM_DDRPLL		BIT(24)
  
@@ -124,7 +131,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
  #define QCA956X_PLL_CPU_CONFIG_REG			0x00
  #define QCA956X_PLL_CPU_CONFIG1_REG			0x04
  #define QCA956X_PLL_DDR_CONFIG_REG			0x08
-@@ -942,8 +942,37 @@
+@@ -894,8 +894,37 @@
  #define AR934X_GPIO_REG_OUT_FUNC3	0x38
  #define AR934X_GPIO_REG_OUT_FUNC4	0x3c
  #define AR934X_GPIO_REG_OUT_FUNC5	0x40
@@ -159,10 +166,10 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 +#define AR934X_GPIO_IN_MUX_I2S_ETH_RX_COL	9
 +#define AR934X_GPIO_IN_MUX_I2S_ETH_RX_CRS	10
 +
- #define QCA956X_GPIO_REG_OUT_FUNC0	0x2c
- #define QCA956X_GPIO_REG_OUT_FUNC1	0x30
- #define QCA956X_GPIO_REG_OUT_FUNC2	0x34
-@@ -1035,7 +1035,231 @@
+ #define QCA953X_GPIO_REG_OUT_FUNC0	0x2c
+ #define QCA953X_GPIO_REG_OUT_FUNC1	0x30
+ #define QCA953X_GPIO_REG_OUT_FUNC2	0x34
+@@ -966,7 +966,231 @@
  #define AR934X_SRIF_DPLL2_LOCAL_PLL	BIT(30)
  #define AR934X_SRIF_DPLL2_OUTDIV_SHIFT	13
  #define AR934X_SRIF_DPLL2_OUTDIV_MASK	0x7
@@ -391,9 +398,9 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 +#define AR934X_NAND_CMD_END_INT		BIT(1)
 +
 +
- #define AR71XX_GPIO_FUNC_STEREO_EN		BIT(17)
- #define AR71XX_GPIO_FUNC_SLIC_EN		BIT(16)
- #define AR71XX_GPIO_FUNC_SPI_CS2_EN		BIT(13)
+ #define QCA953X_SRIF_CPU_DPLL1_REG	0x1c0
+ #define QCA953X_SRIF_CPU_DPLL2_REG	0x1c4
+ #define QCA953X_SRIF_CPU_DPLL3_REG	0x1c8
 Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ath79.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/ath79.h
@@ -435,8 +442,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/ath79.h
  static inline u32 ath79_pll_rr(unsigned reg)
  {
  	return __raw_readl(ath79_pll_base + reg);
-@@ -223,5 +223,14 @@ u32 ath79_device_reset_get(u32 mask);
- 
+@@ -210,4 +210,13 @@
  void ath79_flash_acquire(void);
  void ath79_flash_release(void);
 +static inline void ath79_dma_wr(unsigned reg, u32 val)
@@ -454,8 +460,7 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/irq.h
 ===================================================================
 --- a/arch/mips/include/asm/mach-ath79/irq.h
 +++ b/arch/mips/include/asm/mach-ath79/irq.h
-@@ -18,6 +18,28 @@
- 
+@@ -17,7 +17,29 @@
  #define ATH79_MISC_IRQ_BASE	8
  #define ATH79_MISC_IRQ_COUNT	32
 +
@@ -483,15 +488,5 @@ Index: linux-3.18.23/arch/mips/include/asm/mach-ath79/irq.h
  #define ATH79_MISC_IRQ(_x)	(ATH79_MISC_IRQ_BASE + (_x))
  
  #define ATH79_PCI_IRQ_BASE	(ATH79_MISC_IRQ_BASE + ATH79_MISC_IRQ_COUNT)
-Index: linux-3.18.23/arch/mips/ath79/Makefile
-===================================================================
---- a/arch/mips/ath79/Makefile
-+++ b/arch/mips/ath79/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PCI)			+= pci.o
- #
- obj-y					+= dev-common.o
- obj-$(CONFIG_ATH79_DEV_AP9X_PCI)	+= dev-ap9x-pci.o
-+obj-$(CONFIG_ATH79_DEV_AUDIO)		+= dev-audio.o
- obj-$(CONFIG_ATH79_DEV_DSA)		+= dev-dsa.o
- obj-$(CONFIG_ATH79_DEV_ETH)		+= dev-eth.o
- obj-$(CONFIG_ATH79_DEV_GPIO_BUTTONS)	+= dev-gpio-buttons.o
+ #define ATH79_PCI_IRQ_COUNT	6
+ #define ATH79_PCI_IRQ(_x)	(ATH79_PCI_IRQ_BASE + (_x))
