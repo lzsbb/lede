@@ -44,7 +44,7 @@ jobs:
           ./scripts/feeds install -a
           ./scripts/feeds update base packages
           ./scripts/feeds install libpcre
-          make oldconfig
+          
       - name: 下载 dl
         run: |
           make download -j8
